@@ -1,0 +1,21 @@
+.board-container { border-collapse: collapse; }
+.board-container td {
+  width: 34px; height: 34px;
+  border: 1px solid #333;
+  text-align: center; vertical-align: middle;
+  font: bold 18px/1 monospace;
+  padding: 0;
+}
+
+.covered{
+    background-color: rgb(15, 19, 17);
+}
+
+.revealed{
+    background-color: aquamarine;
+
+}
+
+.marked{
+    background-color: rgba(0, 255, 191, 0.281);
+}
