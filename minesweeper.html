@@ -13,6 +13,18 @@
   <table class="board-container">
     <tbody class="board"></tbody>
   </table>
+  <button class="face-button" onclick="onInit()" >
+    <img src="images/NormalFace.png" alt="smiley" class="smiley-img">
+    </button>
+<button class = "game-button" onclick = "hideShowLevelMenu()">Level</button>
+<div class="level-menu hidden"> 
+    <button class = "level" onclick="setLevel('begginer')">Begginer</button>
+    <button class = "level" onclick="setLevel('Intermediate')">Intermediate</button>
+    <button class = "level" onclick="setLevel('Expert')">Expert</button>
+    <button class = "level" onclick="setLevel('Custom')">Custom</button>
+</div>
+    
+
 
   <script src="js/game.js"></script>
 </body>
