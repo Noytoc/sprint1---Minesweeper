@@ -1,4 +1,37 @@
-/* קונסולה כללית */
+
+.lcd{
+  height: 100%;
+  border-radius: 12px;
+  background: #cfd7c9;
+  box-shadow: inset 0 0 0 2px #9aa78f, inset 0 0 0 6px #e8ebdf;
+  padding: 8px;
+  display: grid;
+  grid-template-rows: auto 1fr;   /* ↑ כותרת | ↓ שאר המסך */
+  gap: 8px;
+}
+
+/* פס עליון – הכיתוב */
+.screen-header{
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: linear-gradient(#dce3d6, #c7d0c3); /* ירקרק בהיר */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.7),
+    inset 0 -1px 0 rgba(154,167,143,.6);
+  color: #4a5647;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 1;
+}
+
+
 .console {
   aspect-ratio: 9 / 16;
   max-width: 480px;
@@ -406,3 +439,18 @@ body.dark-mode .custom-panel {
 body.dark-mode .manual-custom-buttns {
   background: linear-gradient(red, rgb(255, 142, 161));
 }
+
+body.dark-mode .lcd{
+  background: #333532;
+  box-shadow: inset 0 0 0 2px #9aa78f, inset 0 0 0 6px #e8ebdf;
+
+}
+body.dark-mode .screen-header{
+  background: linear-gradient(#424440, #292b28); 
+  color: #4a5647;
+  border-color: #080a08;
+  -webkit-text-fill-color: white;
+
+}
+
+
