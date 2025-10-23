@@ -12,6 +12,10 @@ var gHintsLeft = 3
 var gRequestedHint = false
 var gRequestedMegaHint = false
 var gUsedMegaHint = false
+var gMegaStart = null
+var gPendingHintBtnId = null
+
+
 
 var gManualMinesTarget = 0
 var gManualMinesLeft = 0
@@ -35,6 +39,7 @@ var gLevel = {
 }
 
 function onInit() {
+    resetHints()
     const imgEl = document.querySelector('.face-button img')
     imgEl.src = 'images/NormalFace.png'
     closeCustomPanel()
@@ -78,6 +83,27 @@ function onInit() {
         renderBoard(gBoard)
     }
 }
+
+function resetHints() {
+    gHintsLeft = 3
+    gRequestedHint = false
+    gRequestedMegaHint = false
+    gUsedMegaHint = false
+    gMegaStart = null
+    gPendingHintBtnId = null
+
+    var h1img = document.querySelector('#hint1 img')
+    var h2img = document.querySelector('#hint2 img')
+    var h3img = document.querySelector('#hint3 img')
+    var mImg  = document.querySelector('#megaHint img')
+
+    if (h1img) h1img.src = 'images/on.png'
+    if (h2img) h2img.src = 'images/on.png'
+    if (h3img) h3img.src = 'images/on.png'
+    if (mImg)  mImg.src  = 'images/megaHintOn.png'
+}
+
+
 
 function buildBoard(size) {
     var board = []
@@ -196,6 +222,33 @@ function renderCell(i, j) {
 
 
 function onCellClicked(elCell, i, j) {
+    if (gRequestedMegaHint) {
+        if (!gMegaStart) {
+            gMegaStart = { i: i, j: j }
+            return
+        } else {
+            getMegaHint(gMegaStart.i, gMegaStart.j, i, j)
+            gRequestedMegaHint = false
+            gUsedMegaHint = true
+            gMegaStart = null
+            var mh = document.getElementById('megaHint')
+            if (mh) mh.querySelector('img').src = 'images/megaHintOff.png'
+            return
+        }
+    }
+
+    if (gRequestedHint) {
+        getHint(i, j)
+        gRequestedHint = false
+        gHintsLeft--
+        if (gPendingHintBtnId) {
+            var hb = document.getElementById(gPendingHintBtnId)
+            if (hb) hb.querySelector('img').src = 'images/off.png'
+            gPendingHintBtnId = null
+        }
+        return
+    }
+
     if (gActiveBoard === 'manual') return
     if (!gGame.isOn) return
 
@@ -263,12 +316,6 @@ function onHitMine(i, j) {
 
 function onCellMarked(elCell, i, j) {
 
-    if (gRequestedHint){ 
-        setTimeout(getHint(i,j), 1500)
-    }
-    if (gRequestedMegaHint){
-        setTimeout(getMegaHint(i,j), 2000)
-    }
     if (gActiveBoard === 'manual') {
         var cellM = gManualBoard[i][j]
         if (cellM.isRevealed) return
@@ -312,10 +359,9 @@ function onCellMarked(elCell, i, j) {
                 for (var r = 0; r < gLevel.SIZE; r++) {
                     for (var c = 0; c < gLevel.SIZE; c++) {
                         gBoard[r][c].isMine = gManualBoard[r][c].isMine
-                        gBoard[r][c].minesAroundCount = gManualBoard[r][c].minesAroundCount
-                        gBoard[r][c].toDisplay = gManualBoard[r][c].toDisplay
                     }
                 }
+                setMinesNegsCount(gBoard) 
 
                 gActiveBoard = 'main'
                 gGame.isManual = false
@@ -525,24 +571,94 @@ function startManualPlacement() {
 
 
 function usedHint(hintId) {
-    var hintEl = document.getElementById(hintId)
-    if (hintId === "megaHint") {
+    if (hintId === 'megaHint') {
         if (gUsedMegaHint) return
-        gUsedMegaHint = true
-        gRequestedHint=true
-        renderBoard()
-        getMegaHint()
-        hintEl.src = "images/megaHintOff.png"
-    } else {
-        if (gHintsLeft === 0) return 
-        else {
-            getHint()
-            gHintsLeft--
-            hintEl.src = "images/off.png"
+        gRequestedMegaHint = true
+        gMegaStart = null
+        var el = document.getElementById('megaHint')
+        if (el) el.querySelector('img').src = 'images/megaHintOn.png'
+        return
+    }
+    if (gHintsLeft === 0) return
+    gRequestedHint = true
+    gPendingHintBtnId = hintId
+    var el2 = document.getElementById(hintId)
+    if (el2) el2.querySelector('img').src = 'images/on.png'
+}
+
+//hints 
+function getHint(i, j) {
+    var cellsToFlip = []
+    var size = gBoard.length
+    for (var r = i - 1; r <= i + 1; r++) {
+        for (var c = j - 1; c <= j + 1; c++) {
+            if (r < 0 || r >= size || c < 0 || c >= size) continue
+            var cell = gBoard[r][c]
+            if (!cell.isRevealed) {
+                cell._wasHidden = true
+                cell.isRevealed = true
+                renderCell(r, c)
+                cellsToFlip.push({ i: r, j: c })
+            }
         }
     }
+    setTimeout(function () {
+        for (var idx = 0; idx < cellsToFlip.length; idx++) {
+            var pos = cellsToFlip[idx]
+            var c2 = gBoard[pos.i][pos.j]
+            if (c2._wasHidden) {
+                c2.isRevealed = false
+                delete c2._wasHidden
+                renderCell(pos.i, pos.j)
+            }
+        }
+    }, 1500)
 }
 
-function getHint(){ 
+function getMegaHint(i1, j1, i2, j2) {
+    var r0 = Math.min(i1, i2)
+    var r1 = Math.max(i1, i2)
+    var c0 = Math.min(j1, j2)
+    var c1 = Math.max(j1, j2)
 
+    var cellsToFlip = []
+    for (var r = r0; r <= r1; r++) {
+        for (var c = c0; c <= c1; c++) {
+            var cell = gBoard[r][c]
+            if (!cell.isRevealed) {
+                cell._wasHidden = true
+                cell.isRevealed = true
+                renderCell(r, c)
+                cellsToFlip.push({ i: r, j: c })
+            }
+        }
+    }
+
+    setTimeout(function () {
+        for (var idx = 0; idx < cellsToFlip.length; idx++) {
+            var pos = cellsToFlip[idx]
+            var c2 = gBoard[pos.i][pos.j]
+            if (c2._wasHidden) {
+                c2.isRevealed = false
+                delete c2._wasHidden
+                renderCell(pos.i, pos.j)
+            }
+        }
+    }, 2000)
 }
+window.addEventListener('load', function () {
+  gLevel.SIZE = 4
+  gLevel.MINES = 2
+  gGame.isManual = false
+  onInit()
+})
+
+//change mode
+function changeMode(){
+    document.body.classList.toggle('dark-mode');
+}
+  
+
+    
+
+

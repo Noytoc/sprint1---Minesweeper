@@ -1,16 +1,122 @@
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  margin: 24px;
-  color: #222;
+/* קונסולה כללית */
+.console {
+  aspect-ratio: 9 / 16;
+  max-width: 480px;
+  width: min(90vw, 480px);
+  margin: 24px auto 72px;
+  background: linear-gradient(#d7d7d9, #bdbdc1);
+  border-radius: 28px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .15), inset 0 2px 0 rgba(255, 255, 255, .6);
+  display: grid;
 }
 
-h2 {
-  margin: 0 0 8px;
+.console-inner {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 3fr 1fr;
+  gap: 10px;
+  padding: 18px 16px 16px;
+}
+
+/* מסך */
+.screen-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 95%;
+}
+
+.lcd-bezel {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  padding: 12px;
+  background: linear-gradient(#f1f1f3, #e5e5ea);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .9);
+}
+
+.lcd {
+  height: 100%;
+  border-radius: 12px;
+  background: #cfd7c9;
+  box-shadow: inset 0 0 0 2px #9aa78f, inset 0 0 0 6px #e8ebdf;
+  padding: 8px;
+  display: grid;
+}
+
+/* לוח + צד */
+.board-and-side {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  gap: 10px;
+  height: 100%;
+}
+
+.board-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+/* צד */
+.side-panel {
+  background: rgba(255, 255, 255, .35);
+  border: 1px solid rgba(0, 0, 0, .08);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.side-title {
+  margin: 0 0 4px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  opacity: .7;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.side-section {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(0, 0, 0, .15);
+}
+
+/* אזור כפתורים (¼ תחתון) */
+.controls-wrap {
+  background: linear-gradient(#e9e9ee, #dadade);
+  border-radius: 14px;
+  padding: 16px;
+  height: 70%;
+  box-shadow: inset 0 10px 14px rgba(0, 0, 0, .06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* הסטיילים הקיימים שלך */
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  margin: 0;
+  color: #222;
 }
 
 .board-container {
   border-collapse: collapse;
-  margin-top: 12px;
 }
 
 .board .cell {
@@ -26,12 +132,19 @@ h2 {
 }
 
 .cell.covered {
-  background: #e6e6e6;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
+  background: #363535;
+  border-radius: 8px;
+  border: 0px solid #b5b8a3;
+  box-shadow: inset 0 2px 2px rgba(251, 247, 247, 0.2), 0 0 1px rgba(0, 0, 0, 0.4);
 }
 
 .cell.revealed {
-  background: #fdfdfd;
+  background: #8f8d8d;
+  border-radius: 8px;
+  border: 0px solid #b5b8a3;
+  box-shadow: inset 0 2px 2px rgba(251, 247, 247, 0.2), 0 0 1px rgba(0, 0, 0, 0.4);
+  -webkit-text-fill-color: #000000;
+  text-align: center;
 }
 
 .cell.marked {
@@ -42,10 +155,9 @@ h2 {
   display: none;
 }
 
-/* סמיילי – בלי מסגרת */
+/* סמיילי */
 .face-button {
-  margin-top: 12px;
-  padding: 0;
+  padding: 1px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -55,22 +167,40 @@ h2 {
   width: 32px;
   height: 32px;
   display: block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+/* Level */
+.level-block {
+  position: relative;
 }
 
 .game-button {
-  margin-left: 8px;
   padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #d3d3d3;
-  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #d8cfcf;
   cursor: pointer;
+  background: linear-gradient(rgb(255, 255, 0), rgb(185, 185, 81));
+  border-radius: 100px;
+  border: 0px;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .level-menu {
-  margin-top: 8px;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  z-index: 20;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .12);
+  padding: 8px;
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+  width: max-content;
 }
 
 .level-menu.hidden {
@@ -80,9 +210,10 @@ h2 {
 .level {
   padding: 6px 10px;
   border-radius: 8px;
-  border: 1px solid #d3d3d3;
-  background: #fff;
   cursor: pointer;
+  background: linear-gradient(rgb(255, 255, 0), rgb(185, 185, 81));
+  border-radius: 100px;
+  border: 0px;
 }
 
 .level.selected {
@@ -90,19 +221,18 @@ h2 {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, .2);
 }
 
-#custom-panel {
-  margin-top: 10px;
+/* Custom / Manual */
+.custom-panel {
   display: flex;
   align-items: center;
   gap: 10px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 8px 10px;
 }
 
-#custom-left {
-  margin-left: .5rem;
-  font-weight: 600;
-}
-
-#custom-left.hidden {
+.custom-panel.hidden {
   display: none;
 }
 
@@ -113,57 +243,166 @@ h2 {
   border-radius: 6px;
 }
 
-#custom-panel {
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.manual-custom-buttns {
+  background: linear-gradient(rgb(255, 255, 0), rgb(185, 185, 81));
+  border-radius: 100px;
+  border: 0px;
 }
 
-#custom-panel.hidden {
-  display: none;
+.mines-left-readout {
+  font-size: small;
 }
 
-.marked-mine {
-  background-color: red;
-}
-
+/* לבבות ורמזים בתוך ה-side */
 .lives-container {
   display: flex;
   align-items: center;
-  gap: 6px; 
+  gap: 6px;
 }
 
 .heart-btn {
-  background: none;     
-  border: none;       
-  padding: 0;            
-  cursor: default;         
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: default;
 }
 
 .heart-btn img {
-  width: 22px;  
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 .hidden-heart {
   display: none;
 }
 
-.hints-container{
+.hints-container {
   display: flex;
   align-items: center;
-  gap: 6px; 
+  gap: 6px;
+  flex-wrap: wrap;
 }
+
 .hint-btn {
-  background: none;     
-  border: none;       
-  padding: 0;            
-  cursor: default;         
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.hint-btn img{
-  width: 22px;  
-  height: 22px;
+.hint-btn img {
+  width: 20px;
+  height: 20px;
 }
 
+/* פוטר */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fafafa;
+  color: #333;
+  text-align: center;
+  padding: 8px 0;
+  border-top: 1px solid #e5e5e5;
+  font-size: 14px;
+}
+
+/* מובייל */
+@media (max-width: 420px) {
+  .board-and-side {
+    grid-template-columns: 1fr 120px;
+  }
+
+  .board .cell {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+}
+
+/* dark-mode */
+body.dark-mode .console {
+  background: linear-gradient(#7070a5, #2c2c31);
+}
+
+body.dark-mode .lcd {
+  background: #080a08;
+}
+
+body.dark-mode {
+  color: #b4b9d9;
+  background: #111;
+}
+body.dark-mode .lcd-bezel{
+  background: linear-gradient(#22228b, #17173a);
+  
+}
+
+body.dark-mode .side-panel {
+  background: rgba(190, 189, 189, 0.342);
+
+}
+body.dark-mode .side-section {
+  border-top: 1px dashed rgba(222, 193, 193, 0.43);
+}
+
+/* אזור כפתורים (¼ תחתון) */
+body.dark-mode .controls-wrap {
+  background: linear-gradient(#171730, #1a1a93);
+}
+
+body.dark-mode .board .cell {
+  border: 1px solid #d7d1d1;
+}
+
+body.dark-mode .cell.covered {
+  background: rgb(120, 114, 137);
+  border: 0px solid #b5b8a3;
+  box-shadow: inset 0 2px 2px rgba(251, 247, 247, 0.2), 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .cell.revealed {
+  background: rgb(170, 165, 181);
+  border: 0px solid #b5b8a3;
+  box-shadow: inset 0 2px 2px rgba(251, 247, 247, 0.2), 0 0 1px rgba(0, 0, 0, 0.4);
+  -webkit-text-fill-color: white;
+}
+
+body.dark-mode .cell.marked {
+  background: rgb(224, 173, 181);
+}
+
+body.dark-mode .game-button {
+  border: 1px solid #541b1b;
+  background: linear-gradient(red, rgb(255, 142, 161));
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .level-menu {
+  background: #383636;
+  border: 1px solid #000000;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .12);
+}
+
+body.dark-mode .level {
+  background: linear-gradient(red, rgb(255, 142, 161));
+
+}
+
+body.dark-mode .level.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, .2);
+}
+
+/* Custom / Manual */
+body.dark-mode .custom-panel {
+  background: #343232;
+  border: 1px solid #000000;
+  -webkit-text-fill-color: #000000;
+}
+
+body.dark-mode .manual-custom-buttns {
+  background: linear-gradient(red, rgb(255, 142, 161));
+}

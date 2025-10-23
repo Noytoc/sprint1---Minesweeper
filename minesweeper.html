@@ -7,67 +7,111 @@
   <link rel="stylesheet" href="css/main.css"/>
 </head>
 <body>
-  <h2 class="score">Score: <span class="score-value">0</span></h2>
-  <h2 class="time">Time: <span class="time-value">0</span></h2>
 
-  <table class="board-container" id="main-board-wrap">
-    <tbody class="board" id="board-main"></tbody>
-  </table>
+  <div class="console">
+    <div class="console-inner">
 
-  <table class="board-container hidden" id="manual-board-wrap">
-    <tbody class="board" id="board-manual"></tbody>
-  </table>
+    
+      <section class="screen-wrap">
+        <div class="lcd-bezel">
+          <div class="lcd">
+            <div class="board-and-side">
+              <!-- הלוח -->
+              <div class="board-area">
+                <table class="board-container" id="main-board-wrap">
+                  <tbody class="board" id="board-main"></tbody>
+                </table>
 
-  <button class="face-button" onclick="onInit()">
-    <img src="images/NormalFace.png" alt="smiley" class="smiley-img"/>
-  </button>
+                <table class="board-container hidden" id="manual-board-wrap">
+                  <tbody class="board" id="board-manual"></tbody>
+                </table>
+              </div>
 
-  <button class="game-button" onclick="hideShowLevelMenu()">Level</button>
-  <div class="level-menu hidden">
-    <button class="level" onclick="setLevel('Beginner')">Beginner</button>
-    <button class="level" onclick="setLevel('Intermediate')">Intermediate</button>
-    <button class="level" onclick="setLevel('Expert')">Expert</button>
-    <button class="level" onclick="setLevel('Custom')">Custom</button>
-    <button class="level" onclick="setLevel('Manual')">Manual</button>
+              <!-- הפאנל הצדדי בתוך המסך -->
+              <aside class="side-panel">
+                <h3 class="side-title">INFO</h3>
+                <div class="kv">
+                  <span>Score</span>
+                  <span class="score-value">0</span>
+                </div>
+                <div class="kv">
+                  <span>Time</span>
+                  <span class="time-value">0</span>
+                </div>
+
+               
+                <div class="side-section">
+                  <div class="lives-container">
+                    <button id="h1" class="heart-btn"><img src="images/live.png" alt="life"></button>
+                    <button id="h2" class="heart-btn"><img src="images/live.png" alt="life"></button>
+                    <button id="h3" class="heart-btn"><img src="images/live.png" alt="life"></button>
+                  </div>
+                </div>
+
+            
+                <div class="side-section">
+                  <div class="hints-container">
+                    <button id="hint1" class="hint-btn">
+                      <img src="images/on.png" alt="hint" onclick="usedHint('hint1')">
+                    </button>
+                    <button id="hint2" class="hint-btn">
+                      <img src="images/on.png" alt="hint" onclick="usedHint('hint2')">
+                    </button>
+                    <button id="hint3" class="hint-btn">
+                      <img src="images/on.png" alt="hint" onclick="usedHint('hint3')">
+                    </button>
+                    <button id="megaHint" class="hint-btn">
+                      <img src="images/megaHintOn.png" alt="mega hint" onclick="usedHint('megaHint')">
+                    </button>
+                  </div>
+                </div>
+
+                <!-- מונה מוקשים למצב ידני -->
+                <span id="custom-left" class="hidden mines-left-readout"></span>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1/4 תחתון: אזור הכפתורים -->
+      <section class="controls-wrap">
+        <div class="controls-top row">
+          <button class="face-button" onclick="onInit()">
+            <img src="images/NormalFace.png" alt="smiley" class="smiley-img"/>
+          </button>
+
+          <div class="level-block">
+            <button class="game-button" onclick="hideShowLevelMenu()">Level</button>
+            <button class="game-button" onclick="changeMode()">Change Mode</button>
+            <div class="level-menu hidden">
+              <button class="level" onclick="setLevel('Beginner')">Beginner</button>
+              <button class="level" onclick="setLevel('Intermediate')">Intermediate</button>
+              <button class="level" onclick="setLevel('Expert')">Expert</button>
+              <button class="level" onclick="setLevel('Custom')">Custom</button>
+              <button class="level" onclick="setLevel('Manual')">Manual</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="custom-panel" class="hidden custom-panel">
+          <label>Board size:
+            <input id="custom-size" type="number" min="2" max="20" value="8">
+          </label>
+          <label>Mines:
+            <input id="custom-mines" type="number" min="1" value="10">
+          </label>
+        
+          <button class="manual-custom-buttns" onclick="startCustomPlacement()">Start Custom</button>
+          <button class="manual-custom-buttns" onclick="startManualPlacement()">Start Manual</button>
+        
+        </div>
+      </section>
+
+    </div>
   </div>
 
-  <div id="custom-panel" class="hidden">
-    <label>Board size:
-      <input id="custom-size" type="number" min="2" max="20" value="8">
-    </label>
-    <label>Mines:
-      <input id="custom-mines" type="number" min="1" value="10">
-    </label>
-    <button onclick="startCustomPlacement()">Start Custom</button>
-    <button onclick="startManualPlacement()">Start Manual</button>
-  </div>
-  <span id="custom-left" class="hidden" style="margin-left:.5rem;"></span>
-  <div class="lives-container">
-  <button id="h1" class="heart-btn">
-    <img src="images/live.png" alt="life">
-  </button>
-  <button id="h2" class="heart-btn">
-    <img src="images/live.png" alt="life">
-  </button>
-  <button id="h3" class="heart-btn">
-    <img src="images/live.png" alt="life">
-  </button>
-</div>
-
-<div class="hints-container">
-  <button id="hint1" class="hint-btn">
-    <img src="images/on.png" alt="hint" onclick="usedHint(hint1)" >
-  </button>
-  <button id="hint2" class="hint-btn">
-    <img src="images/on.png" alt="hint" onclick="usedHint(hint2)">
-  </button>
-  <button id="hint3" class="hint-btn">
-    <img src="images/on.png" alt="hint" onclick="usedHint(hint3)">
-  </button>
-  <button id="megaHint" class="hint-btn">
-    <img src="images/megaHintOn.png" alt="hint" onclick="usedHint(megaHint)">
-  </button>
-</div>
+  <footer class="footer">© 2025 Noy Tocatly</footer>
 
   <script src="js/game.js"></script>
 </body>
